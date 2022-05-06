@@ -58,18 +58,17 @@ def home(request):
 
 
 def movies_index(request):
-  movies = Movie.objects.all()
+  movies = Movie.objects.all() # using our model to get all the rows in our model table in psql
   return render(request, 'movies/index.html', {'movies': movies})
 
 class MovieCreate(LoginRequiredMixin,CreateView):
   model = Movie
   fields = ['name', 'description', 'genre']
   
-  # This inherited method is called when a
-  # valid cat form is being submitted
+
   def form_valid(self, form):
     # Assign the logged in user (self.request.user)
-    form.instance.user = self.request.user  # form.instance is the cat
+    form.instance.user = self.request.user  
     # Let the CreateView do its job as usual
     return super().form_valid(form)
 
@@ -90,8 +89,8 @@ def add_review(request, movie_id):
 		# creates an instance of out review to be put in the database
 
   new_review = form.save(commit=False)
-  new_review.movie_id = movie_id  
-  new_review.user = user
+  new_review.movie_id = movie_id  # associating review with  movie
+  new_review.user = user #associating the user with the review
   new_review.save() 
     
 
@@ -105,8 +104,7 @@ def review_delete(request, pk):
         return redirect('/movies/')             # Finally, redirect to the homepage.
 
     return render(request, 'review_delete.html', {'review': review})
-    # If method is not POST, render the default template.
-    # *Note*: Replace 'template_name.html' with your corresponding template name.
+   
   
 def review_update(request, pk):
     context = {}
@@ -131,7 +129,6 @@ def assoc_review(request, movie_id, review_id):
 class ReviewDetail(LoginRequiredMixin,CreateView):
   model = Review
   fields = ['comment', 'recommend']
-
 
 
 class ReviewUpdate(LoginRequiredMixin,UpdateView):

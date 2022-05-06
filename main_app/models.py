@@ -26,14 +26,15 @@ class Movie(models.Model):
 		choices=GENRES,
 		default=GENRES[0][0]
 	)
-    class NewManager(models.Manager): 
-        def get_queryset(self):
+    class NewManager(models.Manager): # the interface that interacts with the database
+        def get_queryset(self): # determines the list of objects that you want to display.
             return super().get_queryset() 
     favorites = models.ManyToManyField(User, default=None, blank=True) 
     objects = models.Manager()
     newmanager = NewManager()
     def __str__(self):
         return f"The Movie {self.name} has id of {self.id}"
+        # here we retrieve objects from our database, by constructing a QuerySet via a Manager on our model class.
 
 class Review(models.Model):
     comment = models.CharField(max_length=100)
